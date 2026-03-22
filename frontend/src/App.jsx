@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import { AuthProvider, useAuth } from './contexts/AuthContext.jsx';
@@ -7,6 +7,7 @@ import { TaskProvider } from './contexts/TaskContext.jsx';
 import Login from './components/Auth/Login.jsx';
 import Register from './components/Auth/Register.jsx';
 import Dashboard from './components/Dashboard/Dashboard.jsx';
+import { startKeepAlive, stopKeepAlive } from './services/keepAlive.js';
 
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth();
@@ -71,6 +72,11 @@ const AppRoutes = () => {
 };
 
 const App = () => {
+  useEffect(() => {
+    startKeepAlive();
+    return () => stopKeepAlive();
+  }, []);
+
   return (
     <AuthProvider>
       <AppRoutes />
